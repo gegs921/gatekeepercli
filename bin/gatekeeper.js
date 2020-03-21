@@ -21,9 +21,14 @@ require('yargs')
     else {
       fs.readFile(argv.file, (err, data) => {
         if(err) throw err;
-        console.log(data);
+        let fileContentArr = data.toString().split(' ');
+        for(let i = 0; i < fileContentArr.length; i++) {
+          if(fileContentArr[i].includes('process.env')) {
+            console.log(fileContentArr[i]);
+          }
+        }
       })
     }
   })
   .help()
-  .argv();
+  .argv

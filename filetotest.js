@@ -1,0 +1,1 @@
+const myVariable = "my variable";
