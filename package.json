@@ -1,8 +1,11 @@
 {
   "name": "gatekeepercli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A cli that creates and fills out a .env file for you",
   "main": "index.js",
+  "bin": {
+    "gk": "./bin/gatekeeper.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
