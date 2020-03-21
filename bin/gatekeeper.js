@@ -19,12 +19,37 @@ require('yargs')
       return 1;
     }
     else {
+      let envVariables = [];
+
       fs.readFile(argv.file, (err, data) => {
         if(err) throw err;
-        let fileContentArr = data.toString().split(' ');
-        for(let i = 0; i < fileContentArr.length; i++) {
-          if(fileContentArr[i].includes('process.env')) {
-            console.log(fileContentArr[i]);
+        let words = data.toString().split('\n').join(' ').split(' ');
+        for(let i = 0; i < words.length; i++) {
+          if(words[i].includes('process.env')) {
+            let thirds = words[i].split('.');
+            let envVar = thirds[thirds.length - 1];
+            if(envVar.includes(';') || envVar.includes(',') || envVar.includes('{')) {
+              let envVarChars = envVar.split('');
+              envVarChars.pop();
+              envVariables.push(envVarChars.join(''));
+            }
+            else {
+              envVariables.push(envVar);
+            }
+          }
+          if(i === words.length - 1) {
+            let newArr = [];
+            for(let a = 0; a < envVariables.length; a++) {
+              newArr.push(envVariables[a] + "=");
+              newArr.push("\n");
+              if(a === envVariables.length - 1) {
+                let contentBuffer = new Uint8Array(Buffer.from(newArr.join('')));
+                fs.writeFile('.env', contentBuffer, (err) => {
+                  if(err) throw err;
+                  console.log('Your .env file has been saved');
+                })
+              }
+            }
           }
         }
       })

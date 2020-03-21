@@ -1,6 +1,6 @@
 {
   "name": "gatekeeperjs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A cli that creates and fills out a .env file for you",
   "main": "index.js",
   "scripts": {
