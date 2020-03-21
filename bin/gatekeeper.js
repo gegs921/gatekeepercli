@@ -19,7 +19,10 @@ require('yargs')
       return 1;
     }
     else {
-      // main code here
+      fs.readFile(argv.file, (err, data) => {
+        if(err) throw err;
+        console.log(data);
+      })
     }
   })
   .help()
