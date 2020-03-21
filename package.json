@@ -1,5 +1,5 @@
 {
-  "name": "gatekeeperjs",
+  "name": "gatekeepercli",
   "version": "0.1.0",
   "description": "A cli that creates and fills out a .env file for you",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/talonbragg/gatekeeperjs.git"
+    "url": "git+https://github.com/talonbragg/gatekeepercli.git"
   },
   "keywords": [
     "gate",
@@ -22,9 +22,9 @@
   "author": "Talon Bragg",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/talonbragg/gatekeeperjs/issues"
+    "url": "https://github.com/talonbragg/gatekeepercli/issues"
   },
-  "homepage": "https://github.com/talonbragg/gatekeeperjs#readme",
+  "homepage": "https://github.com/talonbragg/gatekeepercli#readme",
   "dependencies": {
     "yargs": "^15.3.1"
   }
