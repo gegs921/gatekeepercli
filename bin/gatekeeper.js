@@ -43,20 +43,53 @@ require('yargs')
       console.log('That is not a directory!');
     }
     else {
-      fs.readdir(argv.directory, function(err, files) {
-        console.log(files);
-        for(i = 0; i < files.length; i++) {
-          if(path.extname(`./${argv.directory}/${files[i]}`) !== '.js') {
-            console.log('not js file');
-          }
-          else {
-            getVars(`./${argv.directory}/${files[i]}`).then((msg) => {
-              console.log(msg);
-            }).catch((err) => {
-              console.log(err);
-            })
-          }
+      function filewalker(dir, done) {
+        let results = [];
+    
+        fs.readdir(dir, function(err, list) {
+          if (err) return done(err);
+  
+          var pending = list.length;
+  
+          if (!pending) return done(null, results);
+  
+          list.forEach(function(file){
+            file = path.resolve(dir, file);
+
+            fs.stat(file, function(err, stat){
+              // If directory, execute a recursive call
+              if (stat && stat.isDirectory()) {
+                // Add directory to array [comment if you need to remove the directories from the array]
+
+                filewalker(file, function(err, res){
+                  results = results.concat(res);
+                  if (!--pending) done(null, results);
+                });
+              } else {
+                results.push(file);
+
+                if (!--pending) done(null, results);
+              }
+            });
+          });
+        });
+      }
+      filewalker(argv.directory, (err, data) => {
+        if(err) {
+          throw err;
         }
+
+        console.log(data);
+
+        data.forEach((file) => {
+          let duoArr = file.split(argv.directory);
+          console.log(argv.directory + duoArr[1]);
+          getVars(argv.directory + duoArr[1]).then((msg) => {
+            console.log(msg);
+          }).catch((err) => {
+            console.log(err);
+          })
+        })
       })
     }
   })
