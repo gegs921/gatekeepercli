@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs');
+const path = require('path');
 const getVars = require('../lib/getVars.js');
 
 require('yargs')
@@ -45,11 +46,16 @@ require('yargs')
       fs.readdir(argv.directory, function(err, files) {
         console.log(files);
         for(i = 0; i < files.length; i++) {
-          getVars(`./${argv.directory}/${files[i]}`).then((msg) => {
-            console.log(msg);
-          }).catch((err) => {
-            console.log(err);
-          })
+          if(path.extname(`./${argv.directory}/${files[i]}`) !== '.js') {
+            console.log('not js file');
+          }
+          else {
+            getVars(`./${argv.directory}/${files[i]}`).then((msg) => {
+              console.log(msg);
+            }).catch((err) => {
+              console.log(err);
+            })
+          }
         }
       })
     }
