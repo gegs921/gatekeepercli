@@ -7,3 +7,5 @@
 **Usage**
 
 `$ gk create [filename]`
+
+`$ gk creatDir [directory]`
