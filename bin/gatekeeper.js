@@ -87,11 +87,17 @@ require('yargs')
         data.forEach((file) => {
           let duoArr = file.split(argv.directory);
           console.log(argv.directory + duoArr[1]);
-          getVars(argv.directory + duoArr[1]).then((msg) => {
-            console.log(msg);
-          }).catch((err) => {
-            console.log(err);
-          })
+
+          if(path.extname(duoArr[1]) !== '.js') {
+            console.log('not javascript file');
+          }
+          else {
+            getVars(argv.directory + duoArr[1]).then((msg) => {
+              console.log(msg);
+            }).catch((err) => {
+              console.log(err);
+            })
+          }
         })
       })
     }
