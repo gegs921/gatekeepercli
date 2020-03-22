@@ -20,6 +20,9 @@ require('yargs')
       console.log(`The file, ${argv.file}, does not exist.`);
       return 1;
     }
+    else if(path.extname(argv.file) !== '.js') {
+      console.log(`${argv.file} is not a javascript file`);
+    }
     else {
       getVars(argv.file).then((msg) => {
         console.log(msg);
