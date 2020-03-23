@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const prompts = require('prompts');
+const chalk = require('chalk');
 const getVars = require('../lib/getVars.js');
 
 require('yargs')
@@ -14,15 +15,16 @@ require('yargs')
     })
   }, function(argv) {
     if(!argv.file) {
-      console.log('You need to enter a filename');
+      console.log(chalk.red('You need to enter a filename'));
       return 1;
     }
     else if(fs.existsSync(argv.file) === false) {
-      console.log(`The file, ${argv.file}, does not exist.`);
+      console.log(chalk.red(`The file, ${argv.file}, does not exist.`));
       return 1;
     }
     else if(path.extname(argv.file) !== '.js') {
-      console.log(`${argv.file} is not a javascript file`);
+      console.log(chalk.red(`${argv.file} is not a javascript file`));
+      return 1;
     }
     else {
       getVars(argv.file).then((environmentVars) => {
@@ -36,13 +38,12 @@ require('yargs')
               const response = await prompts({
                 type: 'text',
                 name: 'value',
-                message: `set: ${environmentVars[k]}`,
+                message: `set: ${chalk.green(environmentVars[k])}`,
                 validate: (value) => {
                   dataArr.push(environmentVars[k] + value);
                   return true;
                 }
               })
-              console.log(response.value);
             }
 
             if(k === environmentVars.length - 1) {
@@ -67,11 +68,11 @@ require('yargs')
   }, function(argv) {
 
     if(!argv.directory) {
-      console.log('You need to enter a directory');
+      console.log(chalk.red('You need to enter a directory'));
       return;
     }
     else if(fs.existsSync(argv.directory) === false) {
-      console.log('That is not a directory!');
+      console.log(chalk.red('That is not a directory!'));
     }
     else {
       function filewalker(dir, done) {
