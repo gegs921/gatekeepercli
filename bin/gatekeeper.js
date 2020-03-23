@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
+const prompts = require('prompts');
 const getVars = require('../lib/getVars.js');
 
 require('yargs')
@@ -24,8 +25,35 @@ require('yargs')
       console.log(`${argv.file} is not a javascript file`);
     }
     else {
-      getVars(argv.file).then((msg) => {
-        console.log(msg);
+      getVars(argv.file).then((environmentVars) => {
+        let dataArr = [];
+        (async () => {
+          for(let k = 0; k < environmentVars.length; k++) {
+            if(environmentVars[k] === '\n') {
+              dataArr.push(environmentVars[k]);
+            }
+            else {
+              const response = await prompts({
+                type: 'text',
+                name: 'value',
+                message: `set: ${environmentVars[k]}`,
+                validate: (value) => {
+                  dataArr.push(environmentVars[k] + value);
+                  return true;
+                }
+              })
+              console.log(response.value);
+            }
+
+            if(k === environmentVars.length - 1) {
+              let contentBuffer = new Uint8Array(Buffer.from(dataArr.join('')));
+              fs.writeFile('.env', contentBuffer, (err) => {
+                if(err) { reject(err);}
+                console.log('.env file saved');
+              })
+            }
+          }
+        })();
       }).catch((err) => {
         console.log(err);
       })

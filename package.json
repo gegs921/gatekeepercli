@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/talonbragg/gatekeepercli#readme",
   "dependencies": {
+    "prompts": "^2.3.2",
     "yargs": "^15.3.1"
   }
 }
