@@ -28,19 +28,21 @@ require('yargs')
     }
     else {
       getVars(argv.file).then((environmentVars) => {
+        let rawEnteredVars = [];
         let dataArr = [];
         (async () => {
           for(let k = 0; k < environmentVars.length; k++) {
             if(environmentVars[k] === '\n') {
               dataArr.push(environmentVars[k]);
             }
-            else if(dataArr.includes(environmentVars[k]) === false){
+            else if(rawEnteredVars.includes(environmentVars[k]) === false){
               const response = await prompts({
                 type: 'text',
                 name: 'value',
                 message: `set: ${chalk.green(environmentVars[k])}`,
                 validate: (value) => {
                   dataArr.push(environmentVars[k] + value);
+                  rawEnteredVars.push(environmentVars[k]);
                   return true;
                 }
               })
@@ -125,42 +127,44 @@ require('yargs')
             console.log('not javascript file');
             return;
           }
-            getVars(argv.directory + duoArr[1]).then((environmentVars) => {
-              if(data.indexOf(file) === data.length - 1){
-                let dataArr = [];
-                console.log(environmentVars);
-                (async () => {
-                  for(let k = 0; k < environmentVars.length; k++) {
-                    if(environmentVars[k] === '\n') {
-                      dataArr.push(environmentVars[k]);
-                    }
-                    else if(dataArr.includes(environmentVars[k]) === false) {
-                      const response = await prompts({
-                        type: 'text',
-                        name: 'value',
-                        message: `set: ${chalk.green(environmentVars[k])}`,
-                        validate: (value) => {
-                          dataArr.push(environmentVars[k] + value);
-                          return true;
-                        }
-                      })
-                    }
-                    else {
-                      //environment variable already defined
-                    }
-                    if(k === environmentVars.length - 1) {
-                      let contentBuffer = new Uint8Array(Buffer.from(dataArr.join('')));
-                      fs.writeFile('.env', contentBuffer, (err) => {
-                        if(err) { reject(err);}
-                        console.log('.env file saved');
-                      })
-                    }
+          getVars(argv.directory + duoArr[1]).then((environmentVars) => {
+            let rawEnteredVars = [];
+            let dataArr = [];
+            if(data.indexOf(file) === data.length - 1){
+              (async () => {
+                for(let k = 0; k < environmentVars.length; k++) {
+                  if(environmentVars[k] === '\n') {
+                    dataArr.push(environmentVars[k]);
                   }
-                })();
-              }
-            }).catch((err) => {
-              console.log(err);
-            })
+                  else if(rawEnteredVars.includes(environmentVars[k]) === false) {
+                    // console.log(dataArr.includes(environmentVars[k]), environmentVars[k], environmentVars);
+                    const response = await prompts({
+                      type: 'text',
+                      name: 'value',
+                      message: `set: ${chalk.green(environmentVars[k])}`,
+                      validate: (value) => {
+                        rawEnteredVars.push(environmentVars[k]);
+                        dataArr.push(environmentVars[k] + value);
+                        return true;
+                      }
+                    })
+                  }
+                  else {
+                    //environment variable already defined
+                  }
+                  if(k === environmentVars.length - 1) {
+                    let contentBuffer = new Uint8Array(Buffer.from(dataArr.join('')));
+                    fs.writeFile('.env', contentBuffer, (err) => {
+                      if(err) { reject(err);}
+                      console.log('.env file saved');
+                    })
+                  }
+                }
+              })();
+            }
+          }).catch((err) => {
+            console.log(err);
+          })
         })
       })
     }
