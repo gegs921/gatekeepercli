@@ -121,8 +121,8 @@ require('yargs')
             console.log('not javascript file');
           }
           else {
-            getVars(argv.directory + duoArr[1]).then((msg) => {
-              console.log(msg);
+            getVars(argv.directory + duoArr[1]).then((environmentVars) => {
+              console.log('done');
             }).catch((err) => {
               console.log(err);
             })
