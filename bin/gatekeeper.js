@@ -162,5 +162,41 @@ require('yargs')
       })
     }
   })
+  .command('gitignore', 'adds existing .env to existing or nonexistant .gitignore file', (yargs) => {
+    // Nothing because no args
+  }, function(argv) {
+    if(fs.existsSync('.gitignore')) {
+      fs.readFile('.gitignore', (err, data) => {
+        if (err) throw err;
+        let stringArr = data.toString().split('\n');
+
+        if(stringArr.includes('.env')) {
+          console.log(chalk.red('Your gitignore already has your .env file mentioned.'))
+        }
+        else {
+          stringArr.push('\n');
+          stringArr.push('.env');
+          stringArr.join('\n');
+          let contentBuffer = new Uint8Array(Buffer.from(stringArr.join('\n')));
+
+          fs.writeFile('.gitignore', contentBuffer, (err) => {
+            if(err) throw err;
+            
+            console.log(chalk.green('Your .gitignore file has been saved.'))
+          })
+        }
+      })
+    }
+    else {
+      let stringToWrite = "\n.env\n";
+      let contentBuffer = new Uint8Array(Buffer.from(stringToWrite));
+
+      fs.writeFile('.gitignore', contentBuffer, (err) => {
+        if(err) throw err;
+
+        console.log(chalk.green('Your .gitignore file has been saved.'))
+      })
+    }
+  })
   .help()
   .argv
