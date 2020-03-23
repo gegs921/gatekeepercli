@@ -16,10 +16,14 @@ This CLI is especially useful if you just cloned a repository and it has a javas
 
 `$ gk create [filename]`
 
-Creates .env file for single javascript file:
+Creates `.env` file for single javascript file:
  - `[filename]` is the javascript file you would like to get the env vars from
 
-`$ gk creatDir [directory]`
+`$ gk createDir [directory]`
 
-Creates .env file for all javascript files in a directory:
+Creates `.env` file for all javascript files in a directory:
  - `[directory]` is the directory you would like to get the env vars from
+
+`$ gk gitignore`
+
+Adds `.env` to existing or nonexisting gitignore
