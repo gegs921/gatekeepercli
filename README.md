@@ -1,5 +1,7 @@
 # gatekeeperjs
 
+![Usage Gif](readmeCont/gkgif.gif)
+
 **Installation**
 
 `$ npm install -g gatekeepercli`
