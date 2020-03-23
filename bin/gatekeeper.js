@@ -66,7 +66,7 @@ require('yargs')
       describe: 'directory to iterate through'
     })
   }, function(argv) {
-
+    let finishedBool = false;
     if(!argv.directory) {
       console.log(chalk.red('You need to enter a directory'));
       return;
@@ -77,13 +77,15 @@ require('yargs')
     else {
       function filewalker(dir, done) {
         let results = [];
-    
         fs.readdir(dir, function(err, list) {
           if (err) return done(err);
   
           var pending = list.length;
   
-          if (!pending) return done(null, results);
+          if (!pending) {
+            finishedBool = true;
+            return done(null, results);
+          }
   
           list.forEach(function(file){
             file = path.resolve(dir, file);
@@ -100,7 +102,9 @@ require('yargs')
               } else {
                 results.push(file);
 
-                if (!--pending) done(null, results);
+                if (!--pending) {
+                  done(null, results);
+                }
               }
             });
           });
@@ -111,22 +115,49 @@ require('yargs')
           throw err;
         }
 
-        console.log(data);
-
         data.forEach((file) => {
           let duoArr = file.split(argv.directory);
-          console.log(argv.directory + duoArr[1]);
 
           if(path.extname(duoArr[1]) !== '.js') {
             console.log('not javascript file');
+            return;
           }
-          else {
             getVars(argv.directory + duoArr[1]).then((environmentVars) => {
-              console.log('done');
+              if(data.indexOf(file) === data.length - 1){
+                let dataArr = [];
+                console.log(environmentVars);
+                (async () => {
+                  for(let k = 0; k < environmentVars.length; k++) {
+                    if(environmentVars[k] === '\n') {
+                      dataArr.push(environmentVars[k]);
+                    }
+                    else if(dataArr.includes(environmentVars[k]) === false) {
+                      const response = await prompts({
+                        type: 'text',
+                        name: 'value',
+                        message: `set: ${chalk.green(environmentVars[k])}`,
+                        validate: (value) => {
+                          dataArr.push(environmentVars[k] + value);
+                          return true;
+                        }
+                      })
+                    }
+                    else {
+                      //environment variable already defined
+                    }
+                    if(k === environmentVars.length - 1) {
+                      let contentBuffer = new Uint8Array(Buffer.from(dataArr.join('')));
+                      fs.writeFile('.env', contentBuffer, (err) => {
+                        if(err) { reject(err);}
+                        console.log('.env file saved');
+                      })
+                    }
+                  }
+                })();
+              }
             }).catch((err) => {
               console.log(err);
             })
-          }
         })
       })
     }
