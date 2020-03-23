@@ -1,4 +1,4 @@
-# gatekeeperjs
+# gatekeepercli
 
 *A cli that creates a .env file for you*
 
