@@ -1,6 +1,6 @@
 {
   "name": "gatekeepercli",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "A cli that creates and fills out a .env file for you",
   "main": "index.js",
   "bin": {
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/talonbragg/gatekeepercli#readme",
   "dependencies": {
+    "chalk": "^3.0.0",
     "prompts": "^2.3.2",
     "yargs": "^15.3.1"
   }
