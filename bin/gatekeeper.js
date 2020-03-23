@@ -34,7 +34,7 @@ require('yargs')
             if(environmentVars[k] === '\n') {
               dataArr.push(environmentVars[k]);
             }
-            else {
+            else if(dataArr.includes(environmentVars[k]) === false){
               const response = await prompts({
                 type: 'text',
                 name: 'value',
@@ -44,6 +44,9 @@ require('yargs')
                   return true;
                 }
               })
+            }
+            else {
+              //environment variable already exists
             }
 
             if(k === environmentVars.length - 1) {
