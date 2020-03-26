@@ -205,5 +205,95 @@ require('yargs')
       })
     }
   })
+  .command('createRev [file] [dir] [filename]', 'turns .env variables into javascript references of them', (yargs) => {
+    yargs.positional('file', {
+      type: 'string',
+      describe: '.env file'
+    })
+    yargs.positional('dir', {
+      type: 'string',
+      describe: 'the directory to place the new javascript file in'
+    })
+    yargs.positional('filename', {
+      type: 'string',
+      describe: 'the name of the new javascript file'
+    })
+  }, function(argv) {
+    if(!argv.file) {
+      console.log(chalk.red('You need to enter a .env file.'))
+    }
+    else if(!argv.dir){
+      console.log(chalk.red('You need to enter a directory to place the new javascript file.'))
+    }
+    else if(!argv.filename) {
+      console.log(chalk.red('You need to enter a filename for the new javascript file.'))
+    }
+    else {
+      fs.readFile(argv.file, (err, data) => {
+        let vars = data.toString().split('\n');
+        let jsVars = [];
+        vars.forEach((singVar) => {
+          let varName = singVar.split('=').splice(this.length - 1, 1);
+          jsVars.push(varName);
+
+          //Loop finished
+          if(vars.indexOf(singVar) === vars.length - 1) {
+            function arrayWorking() {
+              //.env file may have had blank lines, this creates empty strings in the jsVars array
+              if(jsVars.includes('') === true) {
+                jsVars.forEach((item) => {
+                  if(item === '') {
+                    jsVars = jsVars.splice(jsVars.indexOf(item), 1);
+                  }
+                  else {
+                    //Do not remove item it is not an empty string
+                  }
+
+                  if(jsVars.indexOf(item) === jsVars.length - 1) {
+                    arrayWorking();
+                  }
+                })
+              }
+              else {
+                let newArr = [];
+                jsVars.forEach((item) => {
+                  if(item[0] === '') {
+                    //do nothing
+                  }
+                  else {
+                    newItem = `let ${item[0].toLowerCase()} = process.env.${item[0]}`;
+                    newArr.push(newItem);
+                  }
+
+                  if(jsVars.indexOf(item) === jsVars.length - 1) {
+                    let buffString = newArr.join('\n');
+                    const data = new Uint8Array(Buffer.from(buffString));
+
+                    if (fs.existsSync(argv.dir) === true) {
+                      fs.writeFile(argv.dir + '/' + argv.filename, data, (err) => {
+                        if(err) throw err;
+                        console.log(chalk.green(`Your ${argv.filename} file has been saved to the directory ${argv.dir}`));
+                      }) 
+                    }
+                    else {
+                      //Create new directory
+                      fs.mkdir(argv.dir, (err) => {
+                        if(err) throw err;
+                        fs.writeFile(argv.dir + '/' + argv.filename, data, (err) => {
+                          if(err) throw err;
+                          console.log(chalk.green(`Your ${argv.filename} file has been saved to the directory ${argv.dir}`));
+                        })
+                      })
+                    }
+                  }
+                })
+              }
+            }
+            arrayWorking();
+          }
+        })
+      })
+    }
+  })
   .help()
   .argv
