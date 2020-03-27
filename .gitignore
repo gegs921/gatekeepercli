@@ -69,6 +69,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variables file
+.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -113,16 +114,5 @@ dist
 .yarn/build-state.yml
 .pnp.*
 
-# js files
-
-filestotest.js
-
-# test directories
-
-testDir
-
-
-.env
-.env.test
-
-envVarJS
+test/.gitignore
+test/environmentVars.js

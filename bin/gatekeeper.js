@@ -4,6 +4,7 @@ const path = require('path');
 const prompts = require('prompts');
 const chalk = require('chalk');
 const getVars = require('../lib/getVars.js');
+const gitignoreCommand = require('../lib/gitignore.js');
 
 require('yargs')
   .scriptName("gk")
@@ -169,41 +170,24 @@ require('yargs')
       })
     }
   })
-  .command('gitignore', 'adds existing .env to existing or nonexistant .gitignore file', (yargs) => {
+  .command('gitignore [dir]', 'adds existing .env to existing or nonexistant .gitignore file', (yargs) => {
     // Nothing because no args
   }, function(argv) {
-    if(fs.existsSync('.gitignore')) {
-      fs.readFile('.gitignore', (err, data) => {
-        if (err) throw err;
-        let stringArr = data.toString().split('\n');
-
-        if(stringArr.includes('.env')) {
-          console.log(chalk.red('Your gitignore already has your .env file mentioned.'))
-        }
-        else {
-          stringArr.push('\n');
-          stringArr.push('.env');
-          stringArr.join('\n');
-          let contentBuffer = new Uint8Array(Buffer.from(stringArr.join('\n')));
-
-          fs.writeFile('.gitignore', contentBuffer, (err) => {
-            if(err) throw err;
-            
-            console.log(chalk.green('Your .gitignore file has been saved.'))
-          })
-        }
-      })
+    let directory;
+    if(!argv.dir) {
+      directory = '';
+    }
+    else if(argv.dir === '/') {
+      directory = '';
     }
     else {
-      let stringToWrite = "\n.env\n";
-      let contentBuffer = new Uint8Array(Buffer.from(stringToWrite));
-
-      fs.writeFile('.gitignore', contentBuffer, (err) => {
-        if(err) throw err;
-
-        console.log(chalk.green('Your .gitignore file has been saved.'))
-      })
+      directory = argv.dir;
     }
+    gitignoreCommand(directory).then((buffer) => {
+      console.log(`File buffer: ${buffer}`);
+    }).catch((err) => {
+      console.log(chalk.red(err));
+    });
   })
   .command('createRev [file] [dir] [filename]', 'turns .env variables into javascript references of them', (yargs) => {
     yargs.positional('file', {
