@@ -1,6 +1,6 @@
 # gatekeepercli
 
-*A cli that creates a .env file for you*
+*Environment Variables Done Right* [![Build Status](https://travis-ci.org/talonbragg/gatekeepercli.svg?branch=master)](https://travis-ci.org/talonbragg/gatekeepercli)
 
 ![Usage Gif](readmeCont/gkgif.gif)
 
