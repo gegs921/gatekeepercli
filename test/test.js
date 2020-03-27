@@ -1,6 +1,6 @@
 const test = require('ava');
 const fs = require('fs');
-const getVarsTest = require('../lib/getVars.js');
+const getVars = require('../lib/getVars.js');
 const gitignoreCommand = require('../lib/gitignore.js');
 const travis = require('../lib/travisTest.js');
 
