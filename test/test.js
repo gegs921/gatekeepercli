@@ -1,8 +1,8 @@
 const test = require('ava');
 const fs = require('fs');
-const getVars = require('../lib/getVars.js');
+const getVarsTest = require('../lib/getVars.js');
 const gitignoreCommand = require('../lib/gitignore.js');
-const travis = require('../lib/travis.js');
+const travis = require('../lib/travisTest.js');
 
 test('resolves with array of environment vars', t => {
   const writeString = "const user = process.env.USER;\nconst pass = process.env.PASS;\nconst secret = process.env.SECRET;"
