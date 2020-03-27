@@ -7,7 +7,7 @@
     "gk": "./bin/gatekeeper.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,8 @@
     "chalk": "^3.0.0",
     "prompts": "^2.3.2",
     "yargs": "^15.3.1"
+  },
+  "devDependencies": {
+    "ava": "^3.5.1"
   }
 }
