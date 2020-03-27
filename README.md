@@ -24,9 +24,11 @@ Creates `.env` file for single javascript file:
 Creates `.env` file for all javascript files in a directory:
  - `[directory]` is the directory you would like to get the env vars from
 
-`$ gk gitignore`
+`$ gk gitignore [dir]`
 
 Adds `.env` to existing or nonexisting gitignore
+  - `[dir]` is the directory that the `.gitignore` file is located
+    - the default directory if `[dir]` is left blank is `root` or `/`
 
 `$ gk createRev [file] [dir] [filename]`
 
