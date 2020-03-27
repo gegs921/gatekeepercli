@@ -39,4 +39,10 @@ Creates `.js` file with variables based off of variables in a `.env` file
   - `[filename]` is the name of the new `.js` file
     - example: `$ gk createRev .env newjsfiledir env.js`
 
-`$ `
+`$ gk travis [dir] [travDir]`
+
+Adds environment variables to `.travis.yml` file
+  - `[dir]` is the directory in which your `.env` file is located
+  - `[travDir]` is the directory in which your `.travis.yml` file is located
+    - if there is no `.travis.yml` file, a blank one will be created in the specified directory
+    - leaving this blank will default the directory to `root` or `/`
