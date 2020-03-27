@@ -1,6 +1,6 @@
 # gatekeepercli
 
-*Environment Variables Done Right* [![Build Status](https://travis-ci.org/talonbragg/gatekeepercli.svg?branch=master)](https://travis-ci.org/talonbragg/gatekeepercli)
+*Environment Variables Done Right*
 
 ![Usage Gif](readmeCont/gkgif.gif)
 
@@ -38,3 +38,5 @@ Creates `.js` file with variables based off of variables in a `.env` file
     - directory can be nonexistent
   - `[filename]` is the name of the new `.js` file
     - example: `$ gk createRev .env newjsfiledir env.js`
+
+`$ `

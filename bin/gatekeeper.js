@@ -5,6 +5,7 @@ const prompts = require('prompts');
 const chalk = require('chalk');
 const getVars = require('../lib/getVars.js');
 const gitignoreCommand = require('../lib/gitignore.js');
+const travis = require('../lib/travis.js');
 
 require('yargs')
   .scriptName("gk")
@@ -170,7 +171,7 @@ require('yargs')
       })
     }
   })
-  .command('gitignore [dir]', 'adds existing .env to existing or nonexistant .gitignore file', (yargs) => {
+  .command('gitignore [dir]', 'adds existing .env to existing or nonexistent .gitignore file', (yargs) => {
     // Nothing because no args
   }, function(argv) {
     let directory;
@@ -278,6 +279,45 @@ require('yargs')
         })
       })
     }
+  })
+  .command('travis [dir] [travDir]', 'Lets the user add specific environment variables to existing or nonexistent .travis.yml file', (yargs) => {
+    yargs.positional('dir', {
+      type: 'string',
+      describe: 'directory of .env file'
+    })
+    yargs.positional('travDir', {
+      type: 'string',
+      describe: 'directory to place .travis.yml file or where existing .travis.yml file is located'
+    })
+  }, function(argv) {
+    let directory;
+    let travDir;
+    if(!argv.dir) {
+      directory = '';
+    } 
+    else if(argv.dir === '/') {
+      directory = '';
+    }
+
+    if(!argv.travDir) {
+      travDir = '';
+    }
+    else if(argv.travDir === '/') {
+      travDir = '';
+    }
+
+    if(argv.dir && argv.travDir) {
+      directory = argv.dir;
+      travDir = argv.travDir;
+    }
+
+    //Main code
+    travis(directory, travDir).then(() => {
+
+    }).catch((err) => {
+      console.log(chalk.red(err));
+    })
+
   })
   .help()
   .argv
